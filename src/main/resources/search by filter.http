@@ -1,0 +1,8 @@
+POST http://localhost:8080/searchByFilter
+Content-Type: application/json
+
+{
+  "schoolType": 1,
+  "minSafety": 0.8,
+  "landmarkKey": "pa"
+}
