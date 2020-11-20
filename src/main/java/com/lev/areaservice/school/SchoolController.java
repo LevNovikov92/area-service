@@ -14,10 +14,16 @@ import java.util.List;
 public class SchoolController {
 
     final SchoolRepo schoolRepo;
+    final SchoolTypeRepo schoolTypeRepo;
 
     @GetMapping("/school")
     public List<School> getSchools() {
         return Lang.toList(schoolRepo.findAll());
+    }
+
+    @GetMapping("/schoolType")
+    public List<SchoolType> getSchoolTypes() {
+        return Lang.toList(schoolTypeRepo.findAll());
     }
 
     @GetMapping("/school?area={area}")
