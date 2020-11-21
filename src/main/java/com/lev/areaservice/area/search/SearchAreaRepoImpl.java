@@ -5,6 +5,7 @@ import com.lev.areaservice.area.search.vo.AreaData;
 import com.lev.areaservice.area.search.vo.AreaFromFilter;
 import com.lev.areaservice.area.search.vo.SafetyData;
 import com.lev.areaservice.landmark.Landmark;
+import com.lev.areaservice.school.School;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,7 +34,7 @@ public class SearchAreaRepoImpl implements SearchAreaRepo {
 
     @Override
     public List<AreaFromFilter> getByFilter(SearchFilter filter) {
-        var query = "SELECT a.id, a.title, `as`.score_avg, l.id, l.title, l.desc " +
+        var query = "SELECT a.id, a.title, `as`.score_avg, l.id, l.title, l.desc, s.title " +
                 "FROM `area` as a" +
                 "         left join school s on a.id = s.area" +
                 "         left join landmark l on a.id = l.area_id" +
@@ -64,8 +65,11 @@ public class SearchAreaRepoImpl implements SearchAreaRepo {
             var landmarkId = rs.getInt(4);
             var landmarkTitle = rs.getString(5);
             var landmarkDesc = rs.getString(6);
-            var data = map.getOrDefault(id, new AreaFromFilter(id, title, score, new ArrayList<>()));
+            var schoolTitle = rs.getString(7);
+
+            var data = map.getOrDefault(id, new AreaFromFilter(id, title, score, new HashSet<>(), new HashSet<>()));
             data.getLandmarks().add(new Landmark(landmarkId, landmarkTitle, landmarkDesc, id));
+            data.getSchools().add(new School(schoolTitle));
             map.put(id, data);
             return rs;
         }, args.toArray());
